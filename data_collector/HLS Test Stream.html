@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- saved from url=(0093)https://hivejsartifacts.blob.core.windows.net/artifacts/video-ecosystem/assignment-hlsjs.html -->
+<html lang="en" data-qb-installed="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Test Stream</title>
+    <script src="./HLS Test Stream_files/hls.js@1"></script>
+    <script src="HlsTelemetryCollector.js"></script>
+</head>
+
+<body>
+
+    <h1>Video Ecosystem Assignment</h1>
+    <div>
+        <p>This is the test page for the assignment! For more info please have a look here:</p>
+        <a href="https://github.com/video-dev/hls.js/blob/master/docs/API.md#hlsjs-v1-api">HLS.JS API</a>
+        <a href="https://hivejsartifacts.blob.core.windows.net/artifacts/video-ecosystem/assignment-hlsjs.html">Assignment</a>
+    </div>
+
+    <br>
+
+    <video width="900" id="video" muted="" controls="" src="blob:https://hivejsartifacts.blob.core.windows.net/fa81c10a-a6d7-4577-b1a7-61f514aa17b6"></video>
+
+    <script>
+        const video = document.getElementById('video');
+        const src = "https://streaming-simulator-prod.hivestreaming.com/generic/live/beta-big-bunny-multi/manifest.m3u8";
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(src);
+            hls.attachMedia(video);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play().catch(err => {
+                    console.warn("Autoplay blocked:", err);
+                });
+                
+                // The telemetry collector
+                new HlsTelemetryCollector(hls, video, {
+                    viewerId: "user-123",
+                    sessionId: "sess-001",
+                    eventId: "event-xyz",
+                    endpointUrl: "http://localhost:8000/telemetry", // set to the FastAPI backend URL
+                });
+        
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Safari (native HLS)
+            video.src = src;
+            video.play().catch(err => console.warn("Autoplay blocked:", err));
+        }
+    </script>
+
+

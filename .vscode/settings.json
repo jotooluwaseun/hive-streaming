@@ -1,0 +1,4 @@
+{
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python.analysis.extraPaths": ["./03_pipeline/02_src", "./pipeline/src"]
+}
